@@ -5,6 +5,9 @@ from PySide6.QtCore import Signal
 
 
 class LeftMenu(QWidget):
+
+    #cListSignal = Signal()
+
     def __init__(self):
         super().__init__()
         self.city_list = CityList()
@@ -15,6 +18,7 @@ class LeftMenu(QWidget):
         self.buttons.remove_city_signal.connect(self.handleRemoveCity)
 
         self.initUi()
+
 
 
     def initUi(self):
@@ -35,3 +39,6 @@ class LeftMenu(QWidget):
     def handleRemoveCity(self):
         city_id = self.city_list.currentRow()
         self.city_list.removeCity(city_id)
+
+    def connect_city_signal(self, slot_function):
+        self.city_list.on_current_row_changed.connect(slot_function)

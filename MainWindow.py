@@ -1,17 +1,29 @@
 from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 from LeftMenu import LeftMenu
 from DisplayWeather import DisplayWeather
+from PySide6.QtGui import QPalette
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        palette = self.palette()
+        bg_color_qt = palette.color(QPalette.Window)
+        bg_color_rgb = (bg_color_qt.redF(), bg_color_qt.greenF(), bg_color_qt.blueF())
+
+        text_color_qt = palette.color(QPalette.WindowText)
+        text_color_rgb = (text_color_qt.redF(), text_color_qt.greenF(), text_color_qt.blueF())
+
         self.left_menu = LeftMenu()
-        self.display_weather = DisplayWeather()
+        self.list = self.left_menu.city_list
+        self.display_weather = DisplayWeather(self.list, bg_color_rgb, text_color_rgb)
 
 
         self.createMenuBar()
         self.initUI()
+        self.left_menu.connect_city_signal(self.updateWeather)
+
 
     def initUI(self):
         central_widget = QWidget()
@@ -28,3 +40,5 @@ class MainWindow(QMainWindow):
         file_menu = menubar.addMenu('File')
         edit_menu = menubar.addMenu('Edit')
 
+    def updateWeather(self, city):
+        self.display_weather.showWeather(city)
